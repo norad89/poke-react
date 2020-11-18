@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import './App.css';
 import FetchPokemon from './pokeFetcher'
 
 class App extends Component {
