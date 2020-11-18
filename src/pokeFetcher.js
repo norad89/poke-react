@@ -23,7 +23,7 @@ class FetchPokemon extends Component {
 
     fetchPokemon(event) {
 
-        let chosenPokemon = this.state.value ? this.state.value.toLowerCase() : Math.floor(Math.random() * 151) + 1
+        const chosenPokemon = this.state.value ? this.state.value.toLowerCase() : Math.floor(Math.random() * 151) + 1
 
         fetch('https://pokeapi.co/api/v2/pokemon/' + chosenPokemon)
             .then(res => res.json())
@@ -41,7 +41,7 @@ class FetchPokemon extends Component {
 
     render() {
         return (
-            <>
+            <div id="container">
                 <form id="input" onSubmit={this.fetchPokemon}>
                     <label>Choose Pokémon Name or Number: </label>
                     <input type="text" placeholder="randomize" value={this.state.value} onChange={this.handleChange} />
@@ -51,7 +51,7 @@ class FetchPokemon extends Component {
                 <p>{this.state.name}</p>
                 <p>{this.state.id}</p>
                 <BuildTeam pokemon={this.state} />
-            </>
+            </div>
         )
     }
 }
