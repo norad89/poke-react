@@ -1,28 +1,21 @@
-import { Component } from 'react'
+import { useState } from 'react'
 
-class BuildTeam extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            pokemon: [{
-                id: "",
-                name: "",
-                sprite: "",
-            }]
-        }
-        this.addToTeam = this.addToTeam.bind(this);
-    }
 
-    addToTeam() {
-        let newTeam = this.state.pokemon.slice();
-        let newPokemon = this.props.pokemon;
+function BuildTeam(props) {
+
+const [pokemonOnHand, setPokemon] = useState([props.pokemon])
+    
+    function addToTeam() {
+        const newTeam = pokemonOnHand.slice();
+        const newPokemon = props.pokemon;
+        if (newPokemon.id !== "") {
         newTeam.push(newPokemon);
-        this.setState({ pokemon: newTeam });
+        setPokemon(newTeam);}
     }
 
-    renderTableData() {
-        return this.state.pokemon.map((pokemon, index) => {
-            const { id, name, sprite, } = pokemon //destructuring
+    function renderTableData() {
+        return pokemonOnHand.map((pokemonOnHand, index) => {
+            const { id, name, sprite, } = pokemonOnHand //destructuring
             return (
                 <tr key={index}>
                     <td>{id}</td>
@@ -33,28 +26,25 @@ class BuildTeam extends Component {
         })
     }
 
-    renderTableHeader() {
-        let header = Object.keys(this.state.pokemon[0])
+    function renderTableHeader() {
+        const header = Object.keys(pokemonOnHand[0])
         return header.map((key, index) => {
             return <th key={index}>{key.toUpperCase()}</th>
         })
     }
 
-    render() {
-        return (<>
-            <div>
-                <button onClick={this.addToTeam}>Add to Team</button>
-                <h1 id='title'>Your Team</h1>
-                <table id='team'>
-                    <tbody>
-                        <tr>{this.renderTableHeader()}</tr>
-                        {this.renderTableData()}
-                    </tbody>
-                </table>
-            </div>
-        </>)
-    }
+    return (
+        <div>
+            <button onClick={addToTeam}>Add to Team</button>
+            <h1 id='title'>Your Team</h1>
+            <table id='team'>
+                <tbody>
+                    <tr>{renderTableHeader()}</tr>
+                    {renderTableData()}
+                </tbody>
+            </table>
+        </div>
+    )
 }
-
 
 export default BuildTeam
