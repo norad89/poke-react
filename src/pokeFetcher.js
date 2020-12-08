@@ -1,59 +1,51 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import BuildTeam from './teamBuilder'
 
-class FetchPokemon extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            pokemon: [{
-                id: "",
-                name: "",
-                sprite: "",
-            }],
-            value: "",
-        };
-        this.fetchPokemon = this.fetchPokemon.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+
+function FetchPokemon() {
+    const [pokemon, setPokemon] = useState({
+        id: "",
+        name: "",
+        sprite: ""
+    });
+    const [value, setValue] = useState('')
+
+    function handleChange(event) {
+        setValue(event.target.value);
     }
 
-    handleChange(event) {
+    function fetchPokemon(event) {
 
-        this.setState({ value: event.target.value });
-    }
-
-    fetchPokemon(event) {
-
-        const chosenPokemon = this.state.value ? this.state.value.toLowerCase() : Math.floor(Math.random() * 151) + 1
+        const chosenPokemon = value ? value.toLowerCase() : Math.floor(Math.random() * 151) + 1
 
         fetch('https://pokeapi.co/api/v2/pokemon/' + chosenPokemon)
             .then(res => res.json())
-            .then(pokemon => {
-                this.setState({ id: pokemon.id });
-                this.setState({ name: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1) });
-                this.setState({ sprite: pokemon.sprites.front_default });
-                this.setState({ value: "" })
+            .then(pokeData => {
+                setPokemon({
+                    id: pokeData.id,
+                    name: pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1),
+                    sprite: pokeData.sprites.front_default
+                });
+                setValue("")
             })
             .catch(err => alert("Invalid Pokémon Name or Number"));
-
 
         if (event) event.preventDefault()
     }
 
-    render() {
-        return (
-            <div id="container">
-                <form id="input" onSubmit={this.fetchPokemon}>
-                    <label>Choose Pokémon Name or Number: </label>
-                    <input type="text" placeholder="randomize" value={this.state.value} onChange={this.handleChange} />
-                    <input type="submit" value="Gotcha!" ></input>
-                </form>
-                <img src={this.state.sprite} alt={this.state.name}></img>
-                <p>{this.state.name}</p>
-                <p>{this.state.id}</p>
-                <BuildTeam pokemon={this.state} />
-            </div>
-        )
-    }
+    return (
+        <div>
+            <form id="input" onSubmit={fetchPokemon}>
+                <label>Choose Pokémon Name or Number: </label>
+                <input type="text" placeholder="randomize" value={value} onChange={handleChange} />
+                <input type="submit" value="Gotcha!" ></input>
+            </form>
+            <img src={pokemon.sprite} alt={pokemon.name}></img>
+            <p>{pokemon.name}</p>
+            <p>{pokemon.id}</p>
+            <BuildTeam pokemon={pokemon} />
+        </div>
+    )
 }
 
 export default FetchPokemon
